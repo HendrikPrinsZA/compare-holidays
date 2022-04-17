@@ -8,9 +8,8 @@ Compare the public holidays between two countries
 
 ## Quick Example
 ```Shell
-pip install
-
-python3 main.py SA UK
+pip install -r requirements.txt
+python main.py SA UK
 ```
 
 Output:
