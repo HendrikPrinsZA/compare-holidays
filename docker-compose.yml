@@ -1,0 +1,28 @@
+version: "3"
+services:
+  mysql:
+    container_name: holidays-mysql
+    image: "mysql/mysql-server:latest"
+    ports:
+      - "${DB_PORT_FORWARD:-3306}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - "holidaysmysql:/var/lib/mysql"
+    networks:
+      - holidaysnetwork
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
+      retries: 3
+      timeout: 5s
+networks:
+  holidaysnetwork:
+    driver: bridge
+volumes:
+  holidaysmysql:
+    driver: local

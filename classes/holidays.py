@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from classes.integrations.fetchHolidays import FetchHolidays
+from classes.models.Country import Country
 
 """
 Compare the public holidays between two countries
@@ -11,6 +12,7 @@ Compare the public holidays between two countries
  - UK: https://www.gov.uk/bank-holidays.json
 """
 class Holidays:
+
   def getHolidays(self, year:int, country:str, verbose:bool=False):
     days = FetchHolidays().get(year, country)
     total = 0
@@ -79,3 +81,23 @@ class Holidays:
       print(f"{description}")
 
     return resp
+
+  def importHolidays(self, country:str, yearFrom:int, yearTo:int, verbose:bool):
+    
+    country = Country.firstWhere('code', country)
+
+    # country = Country.updateOrCreate({
+    #   'code': country
+    # })
+
+    print("Country...")
+    print(country)
+    exit(0)
+
+    for year in range(yearFrom, (yearTo + 1)):
+      days = self.getHolidays(year, country, verbose)
+      for day in days['days']:
+        print(day)
+
+  def insertOrUpdateHoliday(self, country:str, day:str, title:str):
+    print("insertOrUpdateHoliday")

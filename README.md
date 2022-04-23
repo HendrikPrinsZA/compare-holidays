@@ -1,4 +1,4 @@
-# compare-holidays
+# Compare public holidays
 Compare the public holidays between two countries
 
 - Main API: https://date.nager.at/api/v3/publicholidays
