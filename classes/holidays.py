@@ -99,13 +99,10 @@ class Holidays:
     for year in range(yearFrom, (yearTo + 1)):
       days = self.getHolidays(year, countryCode, verbose)
       for day in days['days']:
-        print(day)
         holiday = Holiday.updateOrCreate({
-          'country_id': country['id']
+          'country_id': country['id'],
+          'date': day['date'],
+          'title': day['title']
         })
-        # holiday = Holiday.updateOrCreate({
-        #   'country_id': country['id'],
-        #   'date': day['date'],
-        #   'title': day['title']
-        # })
+        print(holiday)
         
