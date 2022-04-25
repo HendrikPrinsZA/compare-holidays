@@ -17,6 +17,7 @@ class Model(object):
   def table(self):
     noun = self.__name__
 
+    # Hack: Not sure if inflectEngine is reliable...
     if noun.endswith('ry'):
       return noun.replace('ry', 'ries').lower()
 
@@ -25,31 +26,38 @@ class Model(object):
 
   @classmethod
   def firstWhere(self, field, value):
+    db = Database(Config())
     table = self.table()
 
-    db = Database(Config())
-    query = f"SELECT * FROM {table} WHERE {field} = '{value}' LIMIT 1;"
-    rows = db.run_query(query)
+    sql = f"SELECT * FROM {table} WHERE {field} = %({field})s"
+    params = {
+      f"{field}": value
+    }
 
+    rows = db.execute(sql, params)
+    
     if len(rows) == 0:
       logger.warning(f"No record found for {field} = '{value}'")
+      return None
 
     return rows[0]
 
   @classmethod
   def updateOrCreate(self, attributes:object, values:object=None):
     table = self.table()
-
+    
     conditions = []
-
-    for field, value in attributes.__dict__.items():
-      conditions.append(f"{field} = '{value}'")
+    params = {}
+    
+    for field, value in attributes.items():
+      conditions.append(f"{field} = :{field}")
+      params[field] = value
 
     db = Database(Config())
-    query = f"SELECT {self.id} FROM {table} WHERE {' AND '.join(conditions)}' LIMIT 1;"
-    rows = db.run_query(query)
+    query = f"SELECT {table}.id FROM {table} WHERE {' AND '.join(conditions)} LIMIT 1;"
+    rows = db.execute(query, params)
 
     if len(rows) == 0:
-      logger.warning(f"No record found for ")
+      logger.warning(f"No record found for '{rows}'")
 
     return rows[0]
