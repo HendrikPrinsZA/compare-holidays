@@ -101,8 +101,9 @@ class Holidays:
       for day in days['days']:
         holiday = Holiday.updateOrCreate({
           'country_id': country['id'],
-          'date': day['date'],
+          'date': day['date']
+        }, {
           'title': day['title']
         })
-        print(holiday)
+        print(f"Created new holiday for {countryCode}: {holiday['date']}")
         
